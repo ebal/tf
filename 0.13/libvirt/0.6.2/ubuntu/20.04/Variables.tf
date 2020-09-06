@@ -11,7 +11,7 @@ variable "ssh_port" {
 
 variable "IP_addr" {
   description = "The mac & iP address for this VM"
-  default     = 51
+  default     = 33
 }
 
 variable "vol_size" {
