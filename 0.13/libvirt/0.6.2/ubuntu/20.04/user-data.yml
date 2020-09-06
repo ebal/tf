@@ -1,0 +1,69 @@
+#cloud-config
+
+disable_root: true
+ssh_pwauth: no
+
+users:
+  - name: ebal
+    ssh_import_id:
+      - gh:ebal
+    shell: /bin/bash
+    sudo: ALL=(ALL) NOPASSWD:ALL
+
+write_files:
+  - path: /etc/ssh/sshd_config
+    content: |
+        AcceptEnv LANG LC_*
+        AllowUsers ebal
+        ChallengeResponseAuthentication no
+        Compression NO
+        MaxSessions 3
+        PasswordAuthentication no
+        PermitRootLogin no
+        Port "${sshdport}"
+        PrintMotd no
+        Subsystem sftp  /usr/lib/openssh/sftp-server
+        UseDNS no
+        UsePAM yes
+        X11Forwarding no
+
+# Set TimeZone
+timezone: Europe/Athens
+
+hostname: "${hostname}"
+
+growpart:
+  mode: auto
+  devices: ['/']
+  ignore_growroot_disabled: false
+
+# Create swap partition
+swap:
+  filename: /swap.img
+  size: "auto"
+  maxsize: 2G
+
+# Install packages
+packages:
+  - figlet
+  - mlocate
+  - python3-apt
+  - bash-completion
+  - ncdu
+
+# Update/Upgrade & Reboot if necessary
+package_update: true
+package_upgrade: true
+package_reboot_if_required: true
+
+# PostInstall
+runcmd:
+  - figlet ${hostname} > /etc/motd
+  - updatedb
+  # Firewall
+  - ufw allow "${sshdport}"/tcp && ufw enable
+  # Remove cloud-init
+  - apt-get -y autoremove --purge cloud-init lxc lxd snapd
+  - apt-get -y --purge autoremove
+  - apt -y autoclean
+  - apt -y clean all
