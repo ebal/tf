@@ -17,5 +17,5 @@ variable "IP_addr" {
 variable "vol_size" {
   description = "The mac & iP address for this VM"
   # 10G
-  default     = 10*1024*1024*1024
+  default = 10 * 1024 * 1024 * 1024
 }
