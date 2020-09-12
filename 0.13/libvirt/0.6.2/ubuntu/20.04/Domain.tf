@@ -26,7 +26,7 @@ resource "libvirt_domain" "domain-ubuntu" {
   }
 
   disk {
-    volume_id = libvirt_volume.ubuntu-2004-base.id
+    volume_id = libvirt_volume.ubuntu-2004-vol.id
   }
 
 }
