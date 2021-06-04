@@ -1,0 +1,5 @@
+artifacts/**
+.terraform.d/**
+.terraform/**
+terraform.*
+.terraform.lock**
